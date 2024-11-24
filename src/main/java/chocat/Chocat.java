@@ -7,9 +7,11 @@ import java.net.Socket;
 public class Chocat {
     private static final int DEFAULT_PORT = 8080;
     private static final String DEFAULT_CHARACTER_SET = "UTF-8";
+    private final HttpRequestParser httpRequestParser;
     private final ServerSocket serverSocket;
 
     public Chocat() {
+        httpRequestParser = new HttpRequestParser();
         try {
             this.serverSocket = new ServerSocket(DEFAULT_PORT);
         } catch (IOException e) {
@@ -33,8 +35,23 @@ public class Chocat {
                 // 클라이언트가 준 입력 출력
                 BufferedReader reader = new BufferedReader(
                         new InputStreamReader(inputStream, DEFAULT_CHARACTER_SET));
-                String clientMessage = reader.readLine();  // 한 줄을 읽음. 개행문자 나올 때까지
-                System.out.println("Message from client : " + clientMessage);
+
+                // 요청 파싱
+                HttpRequest request = httpRequestParser.parse(reader);
+
+                // 요청 출력
+                System.out.println("Method: " + request.getStartLine().getMethod());
+                System.out.println("Path: " + request.getStartLine().getPath());
+                System.out.println("Version: " + request.getStartLine().getVersion());
+
+                System.out.println("Headers:");
+                for (String key : request.getHeaders().keySet()) {
+                    System.out.println(key + ": " + request.getHeaders().get(key));
+                }
+
+                for (String key : request.getBody().keySet()) {
+                    System.out.println(key + ": " + request.getBody().get(key));
+                }
 
                 // 클라이언트에게 메시지 전달
                 BufferedWriter writer = new BufferedWriter(
