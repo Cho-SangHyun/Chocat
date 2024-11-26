@@ -11,14 +11,6 @@ public class RequestStartLine extends StartLine {
         this.version = rawStartLine[2];
     }
 
-    public void setMethod(String method) {
-        this.method = method;
-    }
-
-    public void setPath(String path) {
-        this.path = path;
-    }
-
     public String getMethod() {
         return method;
     }
