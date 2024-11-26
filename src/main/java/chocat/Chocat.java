@@ -54,7 +54,14 @@ public class Chocat {
                 // 클라이언트에게 메시지 전달
                 BufferedWriter writer = new BufferedWriter(
                         new OutputStreamWriter(outputStream, DEFAULT_CHARACTER_SET));
-                writer.write("Hello, I am Chocat\n");
+
+                HttpResponse response = new HttpResponseBuilder()
+                        .startLine(StatusCode.INTERNAL_SERVER_ERROR)
+                        .headers("Content-Type", "application/json")
+                        .body("{\"message\": \"Internal Server Error\"}")
+                        .build();
+
+                writer.write(response.toString());
                 writer.flush();
 
                 // 소켓 닫기
