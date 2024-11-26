@@ -12,11 +12,6 @@ import java.util.Map;
 public class HttpRequestParser {
     private final static String START_LINE_DELIMITER = " ";
     private final static String HEADER_DELIMITER = ": ";
-    private final Gson gson;
-
-    public HttpRequestParser() {
-        this.gson = new Gson();
-    }
 
     public HttpRequest parse(BufferedReader reader) throws IOException {
         RequestStartLine requestStartLine = parseStartLine(reader);
@@ -24,7 +19,7 @@ public class HttpRequestParser {
 
         int contentLength = Integer.parseInt((String) headers
                 .getOrDefault("Content-Length", "0"));
-        Map<String, Object> body = parseBody(reader, contentLength);
+        String body = parseBody(reader, contentLength);
 
         return new HttpRequest(requestStartLine, headers, body);
     }
@@ -48,16 +43,14 @@ public class HttpRequestParser {
         return headers;
     }
 
-    private Map<String, Object> parseBody(BufferedReader reader, int contentLength) throws IOException {
+    private String parseBody(BufferedReader reader, int contentLength) throws IOException {
         if (contentLength <= 0) {
-            return new HashMap<>();
+            return null;
         }
 
-        Type type = new TypeToken<Map<String, Object>>() {}.getType();
         char[] bodyContent = new char[contentLength];
         reader.read(bodyContent, 0, contentLength);
-        String bodyString = new String(bodyContent);
 
-        return gson.fromJson(bodyString, type);
+        return new String(bodyContent);
     }
 }

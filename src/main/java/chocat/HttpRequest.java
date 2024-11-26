@@ -5,12 +5,12 @@ import java.util.Map;
 public class HttpRequest {
     private RequestStartLine startLine;
     private Map<String, String> headers;
-    private Map<String, Object> body;
+    private String body;
 
     public HttpRequest(
             RequestStartLine startLine,
             Map<String, String> headers,
-            Map<String, Object> body) {
+            String body) {
         this.startLine = startLine;
         this.headers = headers;
         this.body = body;
@@ -24,7 +24,7 @@ public class HttpRequest {
         return headers;
     }
 
-    public Map<String, Object> getBody() {
+    public String getBody() {
         return body;
     }
 }

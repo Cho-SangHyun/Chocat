@@ -49,9 +49,7 @@ public class Chocat {
                     System.out.println(key + ": " + request.getHeaders().get(key));
                 }
 
-                for (String key : request.getBody().keySet()) {
-                    System.out.println(key + ": " + request.getBody().get(key));
-                }
+                System.out.println("Body: " + request.getBody());
 
                 // 클라이언트에게 메시지 전달
                 BufferedWriter writer = new BufferedWriter(
